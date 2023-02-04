@@ -3,6 +3,7 @@ from .models import Skill, Experience, Project, Testimonial
 from datetime import date
 from django.views.generic.detail import DetailView
 
+
 # Common elements
 now = date.today()
 current_year = now.year
