@@ -3,7 +3,7 @@ version: '3.8'
 services:
   web:
     build: ./personal_website
-    command: gunicorn personal_website.wsgi:application --bind 0.0.0.0:8002
+    command: gunicorn personal_website.wsgi:application --bind 192.168.1.164:8002
     ports:
       - 8002:8000
 #    env_file:
