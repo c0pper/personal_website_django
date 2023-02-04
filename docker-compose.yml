@@ -3,7 +3,7 @@ version: '3.8'
 services:
   web:
     build: ./personal_website
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 192.168.1.164:8000
     volumes:
       - ./personal_website/:/usr/src/personal_website/
     ports:
