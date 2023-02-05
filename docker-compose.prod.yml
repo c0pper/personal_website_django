@@ -9,7 +9,7 @@ services:
     expose:
       - 8000
     env_file:
-      - ../stack.env  # default name used by portainer for uploaded .env files
+      - stack.env  # default name used by portainer for uploaded .env files
   nginx:
     build: ./nginx
     volumes:
