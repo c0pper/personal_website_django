@@ -9,4 +9,4 @@ services:
     ports:
       - 8002:8000
     env_file:
-      - ./.env.dev
+      - personal_website/.env.dev
