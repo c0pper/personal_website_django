@@ -5,9 +5,9 @@ services:
     build: ./personal_website
     command: gunicorn personal_website.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - /home/simon/PycharmProjects/personal_website_django/personal_website/staticfiles:/usr/src/app/staticfiles/
-      - /home/simon/PycharmProjects/personal_website_django/personal_website/uploads:/usr/src/app/uploads
-      - /home/simon/PycharmProjects/personal_website_django/personal_website/db.sqlite3:/usr/src/app/db.sqlite3
+      - /home/pi/docker/personal_website_django/personal_website/staticfiles:/usr/src/app/staticfiles/
+      - /home/pi/docker/personal_website_django/personal_website/uploads:/usr/src/app/uploads
+      - /home/pi/docker/personal_website_django/personal_website/db.sqlite3:/usr/src/app/db.sqlite3
     expose:
       - 8000
     env_file:
@@ -15,8 +15,8 @@ services:
   nginx:
     build: ./nginx
     volumes:
-      - /home/simon/PycharmProjects/personal_website_django/personal_website/staticfiles:/usr/src/app/staticfiles/
-      - /home/simon/PycharmProjects/personal_website_django/personal_website/uploads:/usr/src/app/uploads
+      - /home/pi/docker/personal_website_django/personal_website/staticfiles:/usr/src/app/staticfiles/
+      - /home/pi/docker/personal_website_django/personal_website/uploads:/usr/src/app/uploads
     ports:
       - 1337:80
     depends_on:
