@@ -16,6 +16,8 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIRS = BASE_DIR / 'templates'
+
+MEDIA_URL = "/uploads/"
 MEDIA_ROOT = BASE_DIR / 'uploads'
 
 # Static files (CSS, JavaScript, Images)
