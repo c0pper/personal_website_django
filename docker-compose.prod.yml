@@ -5,8 +5,8 @@ services:
     build: ./personal_website
     command: gunicorn personal_website.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - static_volume:/usr/src/app/staticfiles/
-      - media_volume:/usr/src/app/uploads
+      - /home/simon/PycharmProjects/personal_website_django/personal_website/staticfiles:/usr/src/app/staticfiles/
+      - /home/simon/PycharmProjects/personal_website_django/personal_website/uploads:/usr/src/app/uploads
     expose:
       - 8000
     env_file:
