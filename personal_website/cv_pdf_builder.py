@@ -1,14 +1,17 @@
 from fpdf import FPDF
-from cv_pdf.resume import ed_experiences, w_experiences, certifications
-from cv_pdf.sidebar import *
+from cv_pdf.sidebar import short_bio, hobbies, contacts, references
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "personal_website.settings")
 
 import django
 django.setup()
-from website.models import Experience
+from website.models import Experience,Certification, Skill
 
 w_experiences = [e for e in Experience.objects.all() if e.exp_type == "W"]
+ed_experiences = [e for e in Experience.objects.all() if e.exp_type == "E"]
+lang_skills = [s for s in Skill.objects.all() if s.category == "L"]
+comp_skills = [s for s in Skill.objects.all() if s.category == "IT"]
+certifications = [c for c in Certification.objects.all()]
 print(w_experiences)
 
 
@@ -73,15 +76,15 @@ def build_skills():
     pdf.set_font("helvetica", "", 9)
     pdf.set_text_color(44, 50, 54)
     for l in lang_skills:
-        pdf.cell(20, 5, l[0], ln=False)
+        pdf.cell(20, 5, l.name, ln=False)
         pdf.cell(20, 5, "", ln=True)
         pdf.set_fill_color(0, 109, 119)
-        pdf.rect(38, pdf.get_y() - 3, (20 * l[1]) / 100, 1, "F")
+        pdf.rect(38, pdf.get_y() - 3, (20 * l.percent) / 100, 1, "F")
     for c in comp_skills:
-        pdf.cell(20, 5, c[0], ln=False)
+        pdf.cell(20, 5, c.name, ln=False)
         pdf.cell(20, 5, "", ln=True)
         pdf.set_fill_color(0, 109, 119)
-        pdf.rect(38, pdf.get_y() - 3, (20 * c[1]) / 100, 1, "F")
+        pdf.rect(38, pdf.get_y() - 3, (20 * c.percent) / 100, 1, "F")
 
 
 def build_contacts():
@@ -136,16 +139,20 @@ def build_w_exp():
     # entries
     pdf.set_text_color(44, 50, 54)
     for e in w_experiences:
+        institution = e.institution.all()[0]
+        place = institution.place.all()[0].name
+        date = str(e.start_time.year) + " - " + str(e.end_time.year) if e.start_time.year != e.end_time.year else \
+            str(e.start_time.year)
+
         pdf.set_x(75)
         pdf.cell(pdf.exp_entry_title_w, 5, "", ln=True)
         pdf.set_x(75)
         pdf.cell(pdf.exp_entry_title_w, default_cell_height, e.name, ln=True)
         pdf.set_x(75)
-        institution = e.institution.all()[0]
-        place = institution.place.all()[0].name
-        date = str(e.start_time.year) + " - " + str(e.end_time.year) if e.start_time.year != e.end_time.year else str(e.start_time.year)
+        pdf.set_font("helvetica", style="U")
         pdf.cell(pdf.exp_entry_title_w, default_cell_height, date + " | " + institution.name + " | " + place,
                  ln=True, link=institution.url)
+        pdf.set_font("helvetica")
         for p in e.points.split("\n"):
             pdf.set_x(80)
             pdf.multi_cell(pdf.exp_entry_title_w, default_cell_height, "- " + p)
@@ -158,15 +165,22 @@ def build_e_exp():
 
     pdf.set_text_color(44, 50, 54)
     for e in ed_experiences:
+        institution = e.institution.all()[0]
+        place = institution.place.all()[0].name
+        date = str(e.start_time.year) + " - " + str(e.end_time.year) if e.start_time.year != e.end_time.year else \
+            str(e.start_time.year)
+
         pdf.set_x(75)
         pdf.cell(pdf.exp_entry_title_w, 5, "", ln=True)
         pdf.set_x(75)
-        pdf.cell(pdf.exp_entry_title_w, default_cell_height, e["name"], ln=True)
+        pdf.cell(pdf.exp_entry_title_w, default_cell_height, e.name, ln=True)
         pdf.set_x(75)
-        pdf.cell(pdf.exp_entry_title_w, default_cell_height, e["date"], ln=True)
+        pdf.cell(pdf.exp_entry_title_w, default_cell_height, date, ln=True)
         pdf.set_x(75)
-        pdf.cell(pdf.exp_entry_title_w, default_cell_height, e["institution"] + e["location"], ln=True, link=e["url"])
-        for p in e["points"]:
+        pdf.set_font("helvetica", style="U")
+        pdf.cell(pdf.exp_entry_title_w, default_cell_height, institution.name + place, ln=True, link=institution.url)
+        pdf.set_font("helvetica")
+        for p in e.points.split("\n"):
             pdf.set_x(80)
             pdf.multi_cell(pdf.exp_entry_title_w, default_cell_height, "- " + p)
     global CURRENT_Y
@@ -184,7 +198,7 @@ def build_certifications():
         pdf.set_font("helvetica")
         pdf.cell(5, 1, "- ")
         pdf.set_font("helvetica", style="U")
-        pdf.cell(pdf.exp_entry_title_w, 1, c["title"], ln=True, link=c["url"])
+        pdf.cell(pdf.exp_entry_title_w, 1, c.name, ln=True, link=c.link)
 
 
 def print_experiences():
